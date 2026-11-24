@@ -1,0 +1,411 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=DM+Sans:wght@500;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>html,body{margin:0;background:#000}canvas{display:block}</style>
+</head><body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script>
+const W = 1080, H = 1920;
+const SAFE_TOP = H * 0.15, SAFE_BOT = H * 0.75;
+const ctx = document.getElementById('c').getContext('2d');
+
+const C = {
+  green: '#7FA544', mustard: '#D7A21E', cream: '#F1E1C0',
+  ink: '#231012', maroon: '#7A1F2B', wave: '#1C6FB5', wave2: '#2E8AD6',
+  textFill: '#FFF3DF', sauce: '#3A1A10',
+  kunafa: ['#E8B04A', '#D3922F', '#F2C566', '#C47F22'],
+  pist: ['#8DB33A', '#6E9A2C', '#A9C95A', '#4F7A22'],
+  bisc: ['#8A5528', '#A8693A', '#6E4220', '#C08550'],
+  shake: { pistachio: '#D6E3AC', biscoff: '#D9B583' }
+};
+
+function clamp(x, a = 0, b = 1) { return Math.max(a, Math.min(b, x)); }
+function ease(x) { x = clamp(x); return x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; }
+function prog(t, s, e) { return clamp((t - s) / (e - s)); }
+function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+// Pre-generate topping pieces (glass-local coords, unit scale)
+function genTopping(seed) {
+  const r = rng(seed), strands = [], bits = [];
+  for (let i = 0; i < 70; i++) {
+    const a = r() * Math.PI * 2, rad = Math.sqrt(r());
+    const x = Math.cos(a) * rad * 150, yb = Math.sin(a) * rad * 34;
+    const lift = (1 - rad) * 70 * r() + 6;
+    const len = 50 + r() * 70, ang = r() * Math.PI;
+    strands.push({ x, y: yb - lift, len, ang, c: C.kunafa[i % 4], w: 4 + r() * 3, k: r() * 30 - 15 });
+  }
+  for (let i = 0; i < 45; i++) {
+    const a = r() * Math.PI * 2, rad = Math.sqrt(r());
+    bits.push({ x: Math.cos(a) * rad * 120, y: Math.sin(a) * rad * 26 - (1 - rad) * 70 - 14, s: 6 + r() * 9, rot: r() * 6, ci: i % 4 });
+  }
+  return { strands, bits };
+}
+const TOP = { pistachio: genTopping(7), biscoff: genTopping(11) };
+
+// Glass: unit dimensions
+const G = { h: 700, wTop: 320, wBot: 250, baseH: 90 };
+
+function drawGlass(cx, baseY, s, o) {
+  o = Object.assign({ sauce: 0, fill: 0, flavor: 'pistachio', topping: 0, bottle: false, rot: 0 }, o);
+  ctx.save();
+  ctx.translate(cx, baseY);
+  ctx.rotate(o.rot);
+  ctx.scale(s, s);
+  const top = -G.h, inBot = -G.baseH, inH = inBot - top;
+  const hw = y => (G.wTop / 2) + ((y - top) / inH) * ((G.wBot - G.wTop) / 2);
+
+  // shadow
+  if (!o.rot) {
+    ctx.fillStyle = 'rgba(35,16,18,0.22)';
+    ctx.beginPath(); ctx.ellipse(18, 4, G.wBot / 2 + 30, 22, 0, 0, Math.PI * 2); ctx.fill();
+  }
+  // body
+  ctx.beginPath();
+  ctx.moveTo(-G.wTop / 2, top); ctx.lineTo(G.wTop / 2, top); ctx.lineTo(G.wBot / 2, inBot); ctx.lineTo(-G.wBot / 2, inBot); ctx.closePath();
+  ctx.fillStyle = 'rgba(255,255,255,0.28)'; ctx.fill();
+
+  // sauce path points
+  const pts = [];
+  const N = 160, turns = 2.3;
+  for (let i = 0; i <= N; i++) {
+    const u = i / N;
+    const y = top + 30 + u * (inH - 50);
+    const ph = u * Math.PI * 2 * turns;
+    pts.push({ x: Math.sin(ph) * hw(y) * 0.92, y, front: Math.cos(ph) > 0, u });
+  }
+  const sauceUpTo = Math.floor(o.sauce * N);
+  function strokeSauce(front) {
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    for (let i = 1; i <= sauceUpTo; i++) {
+      const a = pts[i - 1], b = pts[i];
+      if (b.front !== front) continue;
+      ctx.strokeStyle = front ? 'rgba(58,26,16,0.92)' : 'rgba(58,26,16,0.38)';
+      ctx.lineWidth = front ? 17 : 12;
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    }
+  }
+  strokeSauce(false);
+
+  // shake fill (clip to interior)
+  if (o.fill > 0) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(-G.wTop / 2 + 6, top); ctx.lineTo(G.wTop / 2 - 6, top); ctx.lineTo(G.wBot / 2 - 6, inBot); ctx.lineTo(-G.wBot / 2 + 6, inBot); ctx.closePath();
+    ctx.clip();
+    const fy = inBot - o.fill * inH;
+    ctx.fillStyle = C.shake[o.flavor];
+    ctx.globalAlpha = 0.93;
+    ctx.fillRect(-G.wTop, fy, G.wTop * 2, inBot - fy + 2);
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.beginPath(); ctx.ellipse(0, fy, hw(fy) - 6, 16, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+  strokeSauce(true);
+
+  // faceted base
+  ctx.beginPath();
+  ctx.moveTo(-G.wBot / 2, inBot); ctx.lineTo(G.wBot / 2, inBot); ctx.lineTo(G.wBot / 2 + 8, 0); ctx.lineTo(-G.wBot / 2 - 8, 0); ctx.closePath();
+  ctx.fillStyle = 'rgba(255,255,255,0.45)'; ctx.fill();
+  ctx.strokeStyle = 'rgba(35,16,18,0.35)'; ctx.lineWidth = 3;
+  for (let x = -G.wBot / 2 + 28; x < G.wBot / 2; x += 28) {
+    ctx.beginPath(); ctx.moveTo(x, inBot + 6); ctx.lineTo(x * 1.06, -4); ctx.stroke();
+  }
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.beginPath(); ctx.moveTo(-60, inBot + 10); ctx.lineTo(-40, inBot + 10); ctx.lineTo(-44, -8); ctx.lineTo(-66, -8); ctx.closePath(); ctx.fill();
+
+  // outline
+  ctx.strokeStyle = 'rgba(35,16,18,0.85)'; ctx.lineWidth = 6; ctx.lineJoin = 'round';
+  ctx.beginPath();
+  ctx.moveTo(-G.wTop / 2, top); ctx.lineTo(-G.wBot / 2, inBot); ctx.lineTo(-G.wBot / 2 - 8, 0); ctx.lineTo(G.wBot / 2 + 8, 0); ctx.lineTo(G.wBot / 2, inBot); ctx.lineTo(G.wTop / 2, top);
+  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(-G.wBot / 2, inBot); ctx.lineTo(G.wBot / 2, inBot); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(0, top, G.wTop / 2, 22, 0, 0, Math.PI * 2); ctx.stroke();
+  // highlight
+  ctx.strokeStyle = 'rgba(255,255,255,0.75)'; ctx.lineWidth = 12; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(-G.wTop / 2 + 34, top + 60); ctx.lineTo(-G.wBot / 2 + 30, inBot - 60); ctx.stroke();
+
+  // topping
+  if (o.topping > 0) {
+    const T = TOP[o.flavor];
+    const ks = clamp(o.topping / 0.6), bs = clamp((o.topping - 0.6) / 0.4);
+    const nk = Math.floor(ks * T.strands.length);
+    ctx.lineCap = 'round';
+    for (let i = 0; i < nk; i++) {
+      const st = T.strands[i];
+      ctx.strokeStyle = st.c; ctx.lineWidth = st.w;
+      const dx = Math.cos(st.ang) * st.len / 2, dy = Math.sin(st.ang) * st.len / 6;
+      ctx.beginPath();
+      ctx.moveTo(st.x - dx, top + st.y - dy);
+      ctx.quadraticCurveTo(st.x + st.k, top + st.y - 18, st.x + dx, top + st.y + dy);
+      ctx.stroke();
+    }
+    const nb = Math.floor(bs * T.bits.length);
+    const pal = o.flavor === 'pistachio' ? C.pist : C.bisc;
+    for (let i = 0; i < nb; i++) {
+      const b = T.bits[i];
+      ctx.save(); ctx.translate(b.x, top + b.y); ctx.rotate(b.rot);
+      ctx.fillStyle = pal[b.ci];
+      if (o.flavor === 'pistachio') { ctx.beginPath(); ctx.ellipse(0, 0, b.s * 0.8, b.s * 0.5, 0, 0, Math.PI * 2); ctx.fill(); }
+      else { ctx.fillRect(-b.s / 2, -b.s / 2, b.s, b.s * 0.8); }
+      ctx.restore();
+    }
+  }
+
+  // squeeze bottle at sauce tip
+  if (o.bottle && sauceUpTo > 0) {
+    const p = pts[sauceUpTo];
+    ctx.save(); ctx.translate(p.x, p.y);
+    ctx.fillStyle = '#F7F1E6'; ctx.strokeStyle = 'rgba(35,16,18,0.85)'; ctx.lineWidth = 5;
+    ctx.beginPath(); ctx.moveTo(-6, -10); ctx.lineTo(6, -10); ctx.lineTo(14, -60); ctx.lineTo(-14, -60); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.roundRect(-46, -300, 92, 240, 22); ctx.fill(); ctx.stroke();
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+function drawBlender(t) {
+  const cx = 540, cy = 900, r = 360;
+  ctx.fillStyle = 'rgba(35,16,18,0.18)'; ctx.beginPath(); ctx.arc(cx + 14, cy + 18, r + 30, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#C9CED2'; ctx.beginPath(); ctx.arc(cx, cy, r + 30, 0, Math.PI * 2); ctx.fill();
+  const g = ctx.createRadialGradient(cx, cy, 10, cx, cy, r);
+  g.addColorStop(0, '#9FB86A'); g.addColorStop(1, C.shake.pistachio);
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+  const rot = t * 9;
+  ctx.lineCap = 'round';
+  for (let k = 0; k < 6; k++) {
+    ctx.strokeStyle = k % 2 ? 'rgba(255,255,255,0.55)' : 'rgba(80,110,40,0.45)';
+    ctx.lineWidth = 16;
+    ctx.beginPath();
+    for (let i = 0; i <= 60; i++) {
+      const u = i / 60, rr = 30 + u * (r - 40), a = rot + k * Math.PI / 3 + u * 3.2;
+      const x = cx + Math.cos(a) * rr, y = cy + Math.sin(a) * rr;
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+  }
+  ctx.fillStyle = 'rgba(50,70,25,0.7)'; ctx.beginPath(); ctx.arc(cx, cy, 34, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = 'rgba(35,16,18,0.6)'; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(cx, cy, r + 30, 0, Math.PI * 2); ctx.stroke();
+}
+
+function drawStream(cx, toY, flavor, w) {
+  ctx.fillStyle = C.shake[flavor];
+  ctx.strokeStyle = 'rgba(35,16,18,0.25)'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(cx - w / 2, 0); ctx.lineTo(cx + w / 2, 0); ctx.lineTo(cx + w / 2 - 6, toY); ctx.lineTo(cx - w / 2 + 6, toY); ctx.closePath();
+  ctx.fill(); ctx.stroke();
+}
+
+function drawWave(p) {
+  if (p <= 0 || p >= 1) return;
+  const PW = W * 1.3, L = -PW + p * (W + PW), R = L + PW;
+  const left = y => L + 40 * Math.sin(y / 220 + 0.4);
+  const right = y => R + 70 * Math.sin(y / 260 + 1.3);
+  const g = ctx.createLinearGradient(L, 0, R, 0);
+  g.addColorStop(0, C.wave); g.addColorStop(1, C.wave2);
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.moveTo(left(0), 0);
+  for (let y = 0; y <= H; y += 40) ctx.lineTo(right(y), y);
+  for (let y = H; y >= 0; y -= 40) ctx.lineTo(left(y), y);
+  ctx.closePath(); ctx.fill();
+  // inner swell lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 10;
+  for (let k = 1; k <= 3; k++) {
+    ctx.beginPath();
+    for (let y = 0; y <= H; y += 40) { const x = right(y) - k * 120 + 20 * Math.sin(y / 120 + k); y ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.stroke();
+  }
+  // foam edge
+  ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 30; ctx.lineJoin = 'round';
+  ctx.beginPath();
+  for (let y = 0; y <= H; y += 30) { const x = right(y) - 10; y ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+  ctx.stroke();
+  ctx.fillStyle = '#FFFFFF';
+  for (let y = 20; y < H; y += 70) { ctx.beginPath(); ctx.arc(right(y) + 6, y, 16 + 8 * Math.sin(y), 0, Math.PI * 2); ctx.fill(); }
+}
+
+function fitFont(text, family, size, maxW) {
+  let s = size;
+  do { ctx.font = `${s}px ${family}`; if (ctx.measureText(text).width <= maxW) break; s -= 2; } while (s > 20);
+  return s;
+}
+const DISPLAY = '"Bagel Fat One", "DejaVu Sans", sans-serif';
+function drawLines(lines, t, t0, t1, y0) {
+  if (t < t0 || t >= t1) return;
+  const k = ease(prog(t, t0, t0 + 0.18));
+  const sc = 0.82 + 0.18 * k;
+  ctx.save();
+  ctx.globalAlpha = k;
+  ctx.translate(540, y0); ctx.scale(sc, sc);
+  let y = 0;
+  for (const ln of lines) {
+    const size = fitFont(ln.text, DISPLAY, ln.size || 92, 940);
+    ctx.font = `${size}px ${DISPLAY}`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = C.ink; ctx.lineWidth = size * 0.16;
+    ctx.shadowColor = 'rgba(35,16,18,0.35)'; ctx.shadowOffsetY = 8; ctx.shadowBlur = 0;
+    ctx.strokeText(ln.text, 0, y);
+    ctx.shadowColor = 'transparent';
+    ctx.fillStyle = ln.color || C.textFill;
+    ctx.fillText(ln.text, 0, y);
+    y += size * 1.12 + (ln.gap || 0);
+  }
+  ctx.restore();
+}
+
+const SHOTS = [
+  [0, 2, 'Hook: the wave hits', 'Eye level, locked tripod, 40 cm, 1x'],
+  [2, 3.5, 'Sauce curl macro', '10 cm from glass, slide slowly up the curl'],
+  [3.5, 5, 'Blender vortex', 'Top-down, handheld, braced on jar'],
+  [5, 7, 'Pistachio pour', 'Side-on at glass height, 120fps'],
+  [7, 9, 'Pistachio topping', '45° down, close, real speed'],
+  [9, 11, 'Pistachio hero', 'Low angle, slow push-in 10 cm'],
+  [11, 13, 'Real sauce spiral', 'Side-on, close, locked'],
+  [13, 14.5, 'Biscoff pour', 'Same framing as shot 4, 120fps'],
+  [14.5, 16.5, 'Biscoff topping', '45° down, close, real speed'],
+  [16.5, 18.5, 'Biscoff hero', 'Low angle, slow push-in 10 cm'],
+  [18.5, 22.5, 'Final hero + CTA', 'Eye level, locked, hold still'],
+  [22.5, 23.5, 'Loop back', 'Locked, hidden cut under the wave']
+];
+
+function drawAnnotations(t) {
+  const idx = SHOTS.findIndex(s => t >= s[0] && t < s[1]);
+  const sh = SHOTS[idx < 0 ? SHOTS.length - 1 : idx];
+  const n = (idx < 0 ? SHOTS.length - 1 : idx) + 1;
+  ctx.save();
+  // dashed safe lines
+  ctx.setLineDash([18, 14]); ctx.strokeStyle = 'rgba(35,16,18,0.35)'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(0, SAFE_TOP); ctx.lineTo(W, SAFE_TOP); ctx.moveTo(0, SAFE_BOT); ctx.lineTo(W, SAFE_BOT); ctx.stroke();
+  ctx.setLineDash([]);
+  // top band
+  ctx.fillStyle = 'rgba(35,16,18,0.78)';
+  ctx.beginPath(); ctx.roundRect(40, 60, 1000, 150, 22); ctx.fill();
+  ctx.fillStyle = '#FFF3DF';
+  ctx.font = '700 30px "JetBrains Mono", monospace'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText('ANIMATIC · REPLACE WITH REAL FOOTAGE', 72, 105);
+  ctx.textAlign = 'right';
+  ctx.fillText(t.toFixed(1).padStart(4, '0') + ' s', 1008, 105);
+  ctx.textAlign = 'left';
+  ctx.font = '500 40px "DM Sans", sans-serif';
+  ctx.fillText(`Shot ${n}/12 · ${sh[2]}`, 72, 165);
+  // bottom band
+  ctx.fillStyle = 'rgba(35,16,18,0.78)';
+  ctx.beginPath(); ctx.roundRect(40, 1500, 1000, 200, 22); ctx.fill();
+  ctx.fillStyle = '#FFF3DF';
+  ctx.font = '500 34px "DM Sans", sans-serif';
+  ctx.fillText('Camera: ' + sh[3], 72, 1550);
+  ctx.font = '500 26px "JetBrains Mono", monospace';
+  ctx.fillStyle = 'rgba(255,243,223,0.75)';
+  ctx.fillText('INSTAGRAM CAPTION + BUTTONS ZONE BELOW DASHED LINE', 72, 1600);
+  // beat dots
+  const beat = Math.floor(t / 0.5) % 4;
+  ctx.fillText('120 BPM', 72, 1655);
+  for (let i = 0; i < 4; i++) {
+    ctx.beginPath(); ctx.arc(260 + i * 50, 1655, 14, 0, Math.PI * 2);
+    ctx.fillStyle = i === beat ? (i === 0 ? '#FFD166' : '#FFF3DF') : 'rgba(255,243,223,0.22)';
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+function bg(col) { ctx.fillStyle = col; ctx.fillRect(0, 0, W, H); }
+
+function logoPlaceholder(cx, cy, r) {
+  ctx.save();
+  ctx.setLineDash([16, 12]); ctx.strokeStyle = C.maroon; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = C.maroon; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = '700 26px "JetBrains Mono", monospace';
+  ctx.fillText('PLACE', cx, cy - 34); ctx.fillText('ORIGINAL', cx, cy); ctx.fillText('LOGO FILE', cx, cy + 34);
+  ctx.restore();
+}
+
+function render(t) {
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.globalAlpha = 1;
+  const full = { sauce: 1, fill: 0.86, topping: 1 };
+
+  if (t < 2) {                        // 1 hook
+    bg(C.green);
+    drawGlass(540, 1400, 1, { sauce: t < 1.0 ? 0 : 1 });
+    drawWave(prog(t, 0.5, 1.5));
+  } else if (t < 3.5) {               // 2 macro curl
+    bg(C.green);
+    const d = -200 + 400 * ease(prog(t, 2, 3.5));
+    drawGlass(540, 1800 + d, 2.4, { sauce: 1 });
+  } else if (t < 5) {                 // 3 blender
+    bg(C.green);
+    drawBlender(t);
+  } else if (t < 7) {                 // 4 pour
+    bg(C.green);
+    const f = 0.86 * ease(prog(t, 5, 7));
+    const fy = 1400 - 90 - f * 610;
+    if (t < 6.85) drawStream(540, fy, 'pistachio', 46);
+    drawGlass(540, 1400, 1, { sauce: 1, fill: f, flavor: 'pistachio' });
+  } else if (t < 9) {                 // 5 topping
+    bg(C.green);
+    drawGlass(540, 2090, 1.7, { sauce: 1, fill: 0.86, flavor: 'pistachio', topping: prog(t, 7.1, 8.8) });
+  } else if (t < 11) {                // 6 hero (+ wipe)
+    if (t < 11) bg(C.green);
+    const s = 1 + 0.08 * ease(prog(t, 9, 11));
+    drawGlass(540, 1400, s, Object.assign({ flavor: 'pistachio' }, full));
+    drawWave(prog(t, 10.75, 11.25));
+  } else if (t < 13) {                // 7 sauce spiral (wipe tail)
+    bg(C.mustard);
+    drawGlass(560, 1330, 1, { sauce: ease(prog(t, 11.2, 12.8)), bottle: true, rot: -0.45 });
+    drawWave(prog(t, 10.75, 11.25));
+  } else if (t < 14.5) {              // 8 biscoff pour
+    bg(C.mustard);
+    const f = 0.86 * ease(prog(t, 13, 14.5));
+    const fy = 1400 - 90 - f * 610;
+    if (t < 14.38) drawStream(540, fy, 'biscoff', 46);
+    drawGlass(540, 1400, 1, { sauce: 1, fill: f, flavor: 'biscoff' });
+  } else if (t < 16.5) {              // 9 topping
+    bg(C.mustard);
+    drawGlass(540, 2090, 1.7, { sauce: 1, fill: 0.86, flavor: 'biscoff', topping: prog(t, 14.6, 16.3) });
+  } else if (t < 18.5) {              // 10 hero (+ wipe)
+    bg(C.mustard);
+    const s = 1 + 0.08 * ease(prog(t, 16.5, 18.5));
+    drawGlass(540, 1400, s, Object.assign({ flavor: 'biscoff' }, full));
+    drawWave(prog(t, 18.25, 18.75));
+  } else if (t < 23.0) {              // 11 final hero (+ loop wipe in)
+    bg(C.cream);
+    logoPlaceholder(540, 600, 100);
+    if (t >= 20.25) {
+      ctx.save(); ctx.fillStyle = C.maroon; ctx.textAlign = 'center';
+      ctx.globalAlpha = ease(prog(t, 20.25, 20.45));
+      ctx.font = `44px ${DISPLAY}`; ctx.fillText('New Sip New Love', 540, 760); ctx.restore();
+    }
+    drawGlass(330, 1420, 0.78, Object.assign({ flavor: 'pistachio' }, full));
+    drawGlass(750, 1420, 0.78, Object.assign({ flavor: 'biscoff' }, full));
+    drawWave(prog(t, 18.25, 18.75));
+    drawWave(prog(t, 22.5, 23.5));
+  } else {                            // 12 loop: back to frame 1
+    bg(C.green);
+    drawGlass(540, 1400, 1, { sauce: 0 });
+    drawWave(prog(t, 22.5, 23.5));
+  }
+
+  // on-screen text (graphics layer, above footage)
+  drawLines([{ text: 'A new wave just hit' }, { text: 'Uliyathaduka' }], t, 0, 2, 400);
+  drawLines([{ text: 'Blend', size: 110 }], t, 3.5, 5, 430);
+  drawLines([{ text: 'Pour', size: 110 }], t, 5, 7, 430);
+  drawLines([{ text: 'Kunafa on top', size: 100 }], t, 7, 9, 430);
+  drawLines([{ text: 'Pistachio Kunafa' }, { text: 'Shake · ₹160' }], t, 9, 11, 400);
+  drawLines([{ text: 'Pour', size: 110 }], t, 13, 14.5, 430);
+  drawLines([{ text: 'Kunafa on top', size: 100 }], t, 14.5, 16.5, 430);
+  drawLines([{ text: 'Biscoff Kunafa' }, { text: 'Shake · ₹160' }], t, 16.5, 18.5, 400);
+  drawLines([{ text: 'Catch the wave', size: 100 }], t, 18.75, 20.25, 420);
+  drawLines([{ text: 'Visit ICEWAVES,', size: 78 }, { text: 'Uliyathaduka', size: 78 }], t, 20.25, 22.5, 380);
+
+  drawAnnotations(t);
+}
+window.render = render;
+window.ready = Promise.all([
+  document.fonts.load('92px "Bagel Fat One"'),
+  document.fonts.load('500 40px "DM Sans"'),
+  document.fonts.load('700 30px "JetBrains Mono"')
+]).then(() => document.fonts.ready).then(() => { render(0); return true; });
+</script>
+</body></html>

@@ -1,0 +1,583 @@
+<title>ICEWAVES Shot Sheet</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: maroon badge-style header, a 23.5 s timeline strip coloured by scene paper, then one card per shot, then setup notes and copy. Phone-first, single column, two columns from 760px. */
+:root {
+  --bg: #FFF8EC;
+  --surface: #FFFFFF;
+  --ink: #2A1316;
+  --muted: #6E5A55;
+  --line: #EADCC6;
+  --maroon: #7A1F2B;
+  --on-maroon: #FFF3DF;
+  --wave: #1C6FB5;
+  --wave-soft: #DDEBF7;
+  --ok: #3E7A2E;
+  --scene-green: #7FA544;
+  --scene-mustard: #D7A21E;
+  --scene-cream: #F1E1C0;
+  --scene-ink: #231012;
+  --font-display: "Bagel Fat One", "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #180F11; --surface: #241719; --ink: #F6EADB; --muted: #C2AEA4; --line: #3D2A2C;
+    --maroon: #9B2F3D; --on-maroon: #FFF3DF; --wave: #73B4EE; --wave-soft: #1D2D3D; --ok: #8BC77A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #180F11; --surface: #241719; --ink: #F6EADB; --muted: #C2AEA4; --line: #3D2A2C;
+  --maroon: #9B2F3D; --on-maroon: #FFF3DF; --wave: #73B4EE; --wave-soft: #1D2D3D; --ok: #8BC77A;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55; }
+.wrap { max-width: 980px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+h2 { font-family: var(--font-display); font-weight: 400; font-size: 1.75rem; color: var(--maroon); line-height: 1.1; }
+:root:not([data-theme="light"]) h2 { color: var(--ink); }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) h2 { color: var(--maroon); } }
+:root[data-theme="light"] h2 { color: var(--maroon); }
+h3 { font-size: 1.05rem; font-weight: 700; }
+p { margin: 0; }
+.eyebrow { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+section { padding-block: 2.25rem 0; display: grid; gap: 1rem; }
+.lede { max-width: 65ch; }
+
+/* Header */
+.head { background: var(--maroon); color: var(--on-maroon); }
+.head .wrap { padding-block: 1.75rem 1rem; display: grid; gap: 0.6rem; }
+.head .eyebrow { color: var(--on-maroon); opacity: 0.8; }
+.head h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.6rem, 11vw, 4.5rem); line-height: 0.95; letter-spacing: 0.01em; }
+.head .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chip { font-family: var(--font-mono); font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.wave-edge { display: block; width: 100%; height: 34px; background: var(--maroon); }
+.wave-edge path.w1 { fill: var(--wave); }
+.wave-edge path.w2 { fill: var(--bg); }
+
+/* Status notes */
+.notes { display: grid; gap: 0.75rem; grid-template-columns: 1fr; }
+.note { border-left: 4px solid var(--wave); background: var(--wave-soft); padding: 0.8rem 1rem; border-radius: 0 8px 8px 0; min-width: 0; }
+.note strong { display: block; margin-bottom: 0.15rem; }
+
+/* Concept */
+.concept { display: grid; gap: 1rem; grid-template-columns: 1fr; align-items: start; }
+.big { font-size: 1.2rem; line-height: 1.45; max-width: 60ch; }
+.why { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.4rem; }
+.why li { padding-left: 1.3rem; position: relative; }
+.why li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 0.7rem; height: 0.35rem; border-radius: 0 0 0.35rem 0.35rem; background: var(--wave); }
+
+/* Safe zone frame */
+.frame-row { display: flex; gap: 1.25rem; align-items: center; flex-wrap: wrap; }
+.frame { width: 132px; aspect-ratio: 9 / 16; max-width: 100%; border: 2px solid var(--ink); border-radius: 14px; overflow: hidden; display: grid; grid-template-rows: 15fr 60fr 25fr; font-family: var(--font-mono); font-size: 0.62rem; text-align: center; flex: none; }
+.frame > div { display: grid; place-items: center; padding: 2px; }
+.frame .no { background: repeating-linear-gradient(135deg, var(--line) 0 6px, transparent 6px 12px); color: var(--muted); }
+.frame .yes { background: var(--scene-green); color: var(--scene-ink); font-weight: 500; }
+.frame-text { flex: 1 1 260px; min-width: 0; display: grid; gap: 0.4rem; }
+
+/* Timeline */
+.timeline { display: flex; gap: 2px; height: 58px; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
+.seg { border: 0; padding: 0 0 6px; margin: 0; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; font-family: var(--font-mono); font-size: 0.72rem; color: var(--scene-ink); min-width: 0; position: relative; }
+.seg.green { background: var(--scene-green); }
+.seg.mustard { background: var(--scene-mustard); }
+.seg.cream { background: var(--scene-cream); }
+.seg.done::after { content: ""; position: absolute; top: 7px; left: 50%; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: var(--scene-ink); }
+.seg:hover, .seg:focus-visible { filter: brightness(1.08); outline: none; box-shadow: inset 0 0 0 2px var(--scene-ink); }
+.ticks { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.legend { display: flex; flex-wrap: wrap; gap: 0.9rem; font-size: 0.85rem; color: var(--muted); }
+.legend span::before { content: ""; display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 3px; margin-right: 0.35rem; vertical-align: -0.1rem; border: 1px solid var(--line); }
+.legend .lg::before { background: var(--scene-green); }
+.legend .lm::before { background: var(--scene-mustard); }
+.legend .lc::before { background: var(--scene-cream); }
+.progress { font-family: var(--font-mono); font-size: 0.85rem; font-variant-numeric: tabular-nums; display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+.bar { flex: 1 1 160px; height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--ok); transition: width .25s; }
+.btn { font: inherit; font-size: 0.82rem; padding: 0.35rem 0.8rem; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.btn:hover { border-color: var(--ink); }
+.btn:focus-visible, .shot input:focus-visible { outline: 2px solid var(--wave); outline-offset: 2px; }
+
+/* Shots */
+.shots { display: grid; gap: 1rem; }
+.shot { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; scroll-margin-top: 1rem; min-width: 0; }
+.shot.done { opacity: 0.72; }
+.shot-head { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.swatch { width: 14px; align-self: stretch; border-radius: 4px; flex: none; min-height: 34px; }
+.swatch.green { background: var(--scene-green); }
+.swatch.mustard { background: var(--scene-mustard); }
+.swatch.cream { background: var(--scene-cream); border: 1px solid var(--line); }
+.tc { font-family: var(--font-mono); font-size: 0.85rem; font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
+.shot-title { flex: 1 1 180px; min-width: 0; display: grid; }
+.shot-title h3 { font-size: 1.1rem; }
+.got { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
+.got input { width: 1.15rem; height: 1.15rem; accent-color: var(--ok); }
+.fields { display: grid; grid-template-columns: 1fr; margin: 0; }
+.fields > div { padding: 0.6rem 1rem; border-bottom: 1px solid var(--line); min-width: 0; display: grid; gap: 0.1rem; }
+.fields > div:last-child { border-bottom: 0; }
+.fields dt { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
+.fields dd { margin: 0; }
+.ost { display: inline-block; font-family: var(--font-display); font-size: 1rem; background: var(--scene-ink); color: var(--scene-cream); padding: 0.1rem 0.55rem 0.2rem; border-radius: 6px; }
+.dash { color: var(--muted); }
+.tag { font-family: var(--font-mono); font-size: 0.68rem; padding: 0.1rem 0.45rem; border-radius: 4px; background: var(--wave-soft); color: var(--wave); white-space: nowrap; }
+
+/* Notes blocks */
+.cols { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; display: grid; gap: 0.55rem; min-width: 0; align-content: start; }
+.panel ul, .panel ol { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.35rem; }
+.steps { counter-reset: s; }
+.howto { display: grid; gap: 1rem; }
+.label-table { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th, td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.real { color: var(--ok); font-weight: 700; white-space: nowrap; }
+.gfx { color: var(--wave); font-weight: 700; white-space: nowrap; }
+
+/* Copy */
+.copyblock { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; display: grid; gap: 0.6rem; min-width: 0; }
+.copyblock .top { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.copytext { white-space: pre-wrap; font-size: 0.98rem; overflow-wrap: anywhere; }
+.ostlist { margin: 0; padding-left: 1.6rem; display: grid; gap: 0.3rem; font-variant-numeric: tabular-nums; }
+
+.checks { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.45rem; }
+.checks li { display: flex; gap: 0.6rem; align-items: baseline; }
+.checks b { color: var(--ok); font-family: var(--font-mono); font-size: 0.8rem; flex: none; }
+.checks .warn { color: var(--scene-mustard); }
+footer { padding-block: 2.5rem 2rem; color: var(--muted); font-size: 0.85rem; }
+
+@media (min-width: 760px) {
+  .notes { grid-template-columns: 1fr 1fr; }
+  .concept { grid-template-columns: 1.3fr 1fr; }
+  .fields { grid-template-columns: 1fr 1fr; }
+  .fields > div { border-right: 1px solid var(--line); }
+  .fields > div:nth-child(2n) { border-right: 0; }
+  .fields > div.wide { grid-column: 1 / -1; border-right: 0; }
+  .cols { grid-template-columns: 1fr 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+
+<header class="head">
+  <div class="wrap">
+    <span class="eyebrow">ICEWAVES · Launch Reel · Shot sheet</span>
+    <h1>Catch the Wave</h1>
+    <div class="meta">
+      <span class="chip">23.5 s</span>
+      <span class="chip">9:16 vertical</span>
+      <span class="chip">120 BPM · 1 beat = 0.5 s</span>
+      <span class="chip">1 phone · shop counter</span>
+    </div>
+  </div>
+  <svg class="wave-edge" viewBox="0 0 400 34" preserveAspectRatio="none" aria-hidden="true">
+    <path class="w1" d="M0 14 C40 2 70 2 100 14 S160 26 200 14 S260 2 300 14 S360 26 400 14 V34 H0 Z"/>
+    <path class="w2" d="M0 22 C40 10 70 10 100 22 S160 34 200 22 S260 10 300 22 S360 34 400 22 V34 H0 Z"/>
+  </svg>
+</header>
+
+<main class="wrap">
+
+  <section aria-labelledby="concept-h">
+    <span class="eyebrow">The idea</span>
+    <h2 id="concept-h">A paper wave in the logo's blue does every transition</h2>
+    <div class="concept">
+      <p class="big">A paper wave sweeps across an empty glass and leaves the dark sauce swirl behind. Every step after that (blend, pour, kunafa) is another wave, until both shakes stand together and the wave washes back to the empty glass.</p>
+      <ul class="why">
+        <li>The wave is the logo.</li>
+        <li>The sauce streak inside the glass already curls like a wave.</li>
+        <li>"A new wave just hit Uliyathaduka" is a launch line and a play on the brand name.</li>
+      </ul>
+    </div>
+    <div class="notes">
+      <div class="note"><strong>Film the real shake, as served</strong>The plan uses only the poster details written in the brief. Check every word on screen against the real posters, and if the Biscoff colour differs between posters, go with what you actually serve.</div>
+      <div class="note"><strong>Reference Reel not viewed</strong>The Instagram link could not be opened, so nothing here is copied from it. Send screenshots or a short description to tie the plan to it.</div>
+    </div>
+  </section>
+
+  <section aria-labelledby="tl-h">
+    <span class="eyebrow">Timeline · tap a block to jump to the shot</span>
+    <h2 id="tl-h">12 shots, three paper colours</h2>
+    <div class="timeline" id="timeline" role="list"></div>
+    <div class="ticks" aria-hidden="true"><span>0 s</span><span>6</span><span>12</span><span>18</span><span>23.5 s</span></div>
+    <div class="legend"><span class="lg">Green paper (pistachio)</span><span class="lm">Mustard paper (Biscoff)</span><span class="lc">Cream paper (finale)</span></div>
+    <div class="progress">
+      <span id="count">0 / 12 shots filmed</span>
+      <div class="bar" aria-hidden="true"><i id="barfill"></i></div>
+      <button class="btn" id="reset" type="button">Clear ticks</button>
+    </div>
+  </section>
+
+  <section aria-labelledby="safe-h">
+    <span class="eyebrow">Frame rule</span>
+    <h2 id="safe-h">Keep text and the shake in the middle band</h2>
+    <div class="frame-row">
+      <div class="frame" role="img" aria-label="9 by 16 frame: top 15 percent and bottom 25 percent kept clear">
+        <div class="no">top 15%<br>keep clear</div>
+        <div class="yes">text +<br>shake<br>here</div>
+        <div class="no">bottom 25%<br>caption + buttons</div>
+      </div>
+      <div class="frame-text">
+        <p>Instagram puts its buttons and caption over the top and bottom of the Reel. Put on-screen text about 18–30% down from the top and keep each glass centred between roughly 35% and 72%.</p>
+        <p>Turn on the phone's grid. The top grid line sits at 33%, so text belongs just above it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="shots-h">
+    <span class="eyebrow">Shot by shot</span>
+    <h2 id="shots-h">What to film, in order</h2>
+    <div class="shots" id="shots"></div>
+  </section>
+
+  <section aria-labelledby="hard-h">
+    <span class="eyebrow">Technique</span>
+    <h2 id="hard-h">The four hard shots</h2>
+    <div class="cols">
+      <div class="panel">
+        <h3>1 · Wave hook (hidden cut)</h3>
+        <ol>
+          <li>Phone on the tripod. Long-press the glass to lock focus and exposure.</li>
+          <li><b>Clip A:</b> empty glass, then sweep the paper wave in until it covers the lens. Hold 1 s.</li>
+          <li>Stop recording. Don't touch the phone.</li>
+          <li>Swap in the glass that already has the sauce, on the same tape mark.</li>
+          <li><b>Clip B:</b> start with the wave covering the lens, then pull it away.</li>
+          <li>In the edit, cut while the frame is fully blue. Use the same method for the loop at the end.</li>
+        </ol>
+        <p class="dash">Wave prop: blue chart paper cut into a curl copied from the logo's wave, with a white paper foam edge glued on, taped to a ruler. Hold it about 10 cm from the lens so it fills the frame.</p>
+      </div>
+      <div class="panel">
+        <h3>2 · Sauce spiral in the glass</h3>
+        <ol>
+          <li>Chill the glass in the freezer for 10 minutes so the sauce grips the wall.</li>
+          <li>Tilt the glass to about 45°.</li>
+          <li>Touch the squeeze bottle's nozzle to the inside wall near the rim.</li>
+          <li>Squeeze gently while you turn the glass one full turn and move the nozzle down to the base.</li>
+          <li>Wipe condensation off the outside before filming.</li>
+          <li>Do 3–4 takes. Keep the cleanest spiral.</li>
+        </ol>
+      </div>
+      <div class="panel">
+        <h3>3 · The pour</h3>
+        <ol>
+          <li>Use a jug with a spout.</li>
+          <li>Pour down the centre of the glass, not against the wall, so the sauce streak stays visible.</li>
+          <li>Pour slowly and steadily from about 15 cm above the rim.</li>
+          <li>Phone at glass height, side-on, 1080p at 120fps. Slow it down in the edit.</li>
+          <li>Film both pours from the exact same spot so they match.</li>
+        </ol>
+      </div>
+      <div class="panel">
+        <h3>4 · Kunafa on top</h3>
+        <ol>
+          <li>Lay the golden kunafa strands on with your fingers in a ring. Don't dump them.</li>
+          <li>Then sprinkle chopped pistachios, or crumble a biscuit, from about 10 cm.</li>
+          <li>Keep the biscuit's printed face turned down so no logo shows.</li>
+          <li>Film at real speed, 45° down, close.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="setup-h">
+    <span class="eyebrow">Setup</span>
+    <h2 id="setup-h">Light, paper, phone, sound, edit</h2>
+    <div class="cols">
+      <div class="panel">
+        <h3>Lighting</h3>
+        <ul>
+          <li>Switch off the overhead tube lights. Mixed light turns cream paper green-grey.</li>
+          <li>Glass about 1 m from a window, window to one side and a little behind. Light through the glass makes the sauce and faceted base glow.</li>
+          <li>Direct sun? Tape baking paper over the window.</li>
+          <li>Hold white chart paper on the other side, just out of frame, to fill shadows.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Background and surface</h3>
+        <ul>
+          <li>Curve one chart-paper sheet from the wall onto the counter so there's no horizon line.</li>
+          <li>Green for pistachio, mustard for Biscoff, cream for the finale.</li>
+          <li>Hold the posters next to the paper at the shop and pick the closest shade.</li>
+          <li>Tape small marks where each glass stands.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Phone settings</h3>
+        <ul>
+          <li>Vertical 9:16, on a tripod or wedged between books.</li>
+          <li>Normal shots: 4K, 30fps. Pours: 1080p, 120fps.</li>
+          <li>1x lens. The wide lens bends the glass.</li>
+          <li>Long-press to lock focus and exposure (iPhone AE/AF Lock, Android Pro mode).</li>
+          <li>Exposure down about −0.3 to −0.7 so cream doesn't blow out.</li>
+          <li>Wipe the lens. Airplane mode on. Grid on.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Sound</h3>
+        <ul>
+          <li>Record real sounds with the phone about 15 cm away, fans off: blender, pour, kunafa crunch, glass tap, and the paper wave's swoosh.</li>
+          <li>Music: an upbeat 110–120 BPM track from Instagram's in-app licensed library. On a business account, use the Meta Sound Collection.</li>
+          <li>Keep the real sounds louder than the music on the blender, pour and crunch.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Edit rhythm</h3>
+        <ul>
+          <li>Edit in CapCut or Instagram Edits on a 120 BPM grid: one beat is 0.5 s, one bar of 4 beats is 2 s.</li>
+          <li>Every hard cut lands on a beat.</li>
+          <li>The three wave wipes (11.0, 18.5, 22.5 s) land on the start of a bar.</li>
+          <li>The hook reveal hits the first downbeat at 1.5 s.</li>
+          <li>Keep each text on screen at least 1.5 s.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Prop list</h3>
+        <ul>
+          <li>3 tall faceted glasses (one empty, two for shakes)</li>
+          <li>Squeeze bottle of the dark sauce</li>
+          <li>Blender, spouted jug</li>
+          <li>Kunafa strands, chopped pistachios, Biscoff biscuits</li>
+          <li>Chart paper: green, mustard, cream, blue, white</li>
+          <li>Ruler, tape, scissors, glue</li>
+          <li>Logo printed on card (or the original logo file for the edit)</li>
+          <li>Tripod or books, cloth for wiping glasses</li>
+        </ul>
+      </div>
+    </div>
+    <div class="panel label-table">
+      <h3>Real footage or graphics</h3>
+      <table>
+        <thead><tr><th>Element</th><th>Label</th></tr></thead>
+        <tbody>
+          <tr><td>All product, sauce, blend, pour, topping and hand shots</td><td class="real">REAL FOOTAGE</td></tr>
+          <tr><td>Paper wave wipes and their swoosh sound</td><td class="real">REAL FOOTAGE</td></tr>
+          <tr><td>Blender, pour, crunch and tap sounds</td><td class="real">REAL FOOTAGE</td></tr>
+          <tr><td>On-screen text (cream bubble-style font, soft dark shadow)</td><td class="gfx">OPTIONAL GRAPHICS</td></tr>
+          <tr><td>Logo in the final frame: printed card in shot, or the original logo file in the edit (never redrawn)</td><td><span class="real">REAL</span> or <span class="gfx">GRAPHICS</span></td></tr>
+          <tr><td>Music</td><td>Licensed, from the in-app library</td></tr>
+          <tr><td>AI</td><td>None used</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="copy-h">
+    <span class="eyebrow">Copy</span>
+    <h2 id="copy-h">Ready to paste</h2>
+    <div class="cols">
+      <div class="copyblock">
+        <div class="top"><h3>On-screen text, in order</h3><button class="btn" type="button" data-copy="ost">Copy</button></div>
+        <ol class="ostlist" id="ost">
+          <li>A new wave just hit Uliyathaduka</li>
+          <li>Blend</li>
+          <li>Pour</li>
+          <li>Kunafa on top</li>
+          <li>Pistachio Kunafa Shake · ₹160</li>
+          <li>Pour</li>
+          <li>Kunafa on top</li>
+          <li>Biscoff Kunafa Shake · ₹160</li>
+          <li>Catch the wave</li>
+          <li>Visit ICEWAVES, Uliyathaduka</li>
+          <li>New Sip New Love (small, under the logo)</li>
+        </ol>
+      </div>
+      <div class="copyblock">
+        <div class="top"><h3>Voiceover (optional)</h3><button class="btn" type="button" data-copy="vo">Copy</button></div>
+        <p class="copytext" id="vo">A new wave just hit Uliyathaduka.
+Pistachio Kunafa. Biscoff Kunafa.
+Catch the wave. Visit Icewaves, Uliyathaduka.</p>
+        <p class="dash">The Reel works with sound off and no voiceover.</p>
+      </div>
+    </div>
+    <div class="copyblock">
+      <div class="top"><h3>Instagram caption</h3><button class="btn" type="button" data-copy="cap">Copy</button></div>
+      <p class="copytext" id="cap">A new wave just hit Uliyathaduka 🌊 Pistachio Kunafa and Biscoff Kunafa shakes, ₹160 each. Catch the wave at ICEWAVES, Uliyathaduka. New Sip New Love.
+
+#Icewaves #Uliyathaduka #KunafaShake #PistachioKunafa #BiscoffKunafa</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="check-h">
+    <span class="eyebrow">Before posting</span>
+    <h2 id="check-h">Final check</h2>
+    <ul class="checks">
+      <li><b>OK</b><span>Hook lands at 1.5 s. No logo intro, no slow-motion falling ingredients.</span></li>
+      <li><b>OK</b><span>Runtime 23.5 s, inside 20–25 s.</span></li>
+      <li><b>OK</b><span>One call to action: Visit ICEWAVES, Uliyathaduka.</span></li>
+      <li><b>OK</b><span>No claims beyond the posters: nothing called fresh, homemade, premium or best; no offers; the sauce is never named; no Lotus branding shown.</span></li>
+      <li><b>OK</b><span>All copy in English.</span></li>
+      <li><b class="warn">CHECK</b><span>Spelling and capitals of every on-screen word against the real posters. This plan was written from the brief's description, not the poster images.</span></li>
+    </ul>
+  </section>
+
+  <footer>ICEWAVES · Uliyathaduka · Estd 2026</footer>
+</main>
+
+<script>
+(function () {
+  var shots = [
+    { s: 0, e: 2, bg: "green", title: "Hook: the wave hits",
+      action: "Empty glass centred on green. At 0.5 s the paper wave sweeps in from the left and fills the frame by 1.0 s. It pulls away at 1.5 s: the glass now has the dark sauce swirl.",
+      camera: "Eye level, locked on tripod, about 40 cm away, 1x lens.",
+      props: "Empty glass, a second glass already sauced, tape marks, A3 paper wave on a ruler.",
+      text: "A new wave just hit Uliyathaduka", vo: "A new wave just hit Uliyathaduka.",
+      sound: "Real paper swoosh. Music's first downbeat lands on the reveal at 1.5 s.",
+      next: "Hard cut on the beat." },
+    { s: 2, e: 3.5, bg: "green", title: "Sauce curl macro",
+      action: "The sauce curl climbing the inside wall, framed so it looks like a surf wave.",
+      camera: "Phone 10 cm from the glass, sliding slowly upward along the curl.",
+      props: "Same sauced glass, outside wiped dry.",
+      text: "", vo: "", sound: "Music builds.", next: "Hard cut." },
+    { s: 3.5, e: 5, bg: "green", title: "Blender vortex",
+      action: "Looking straight down into the blender jar mid-blend. The vortex spins like a whirlpool.",
+      camera: "Top-down, handheld, braced on the jar.",
+      props: "Blender with the pistachio shake. Lid off for 1 s, or film through a clear lid.",
+      text: "Blend", vo: "", sound: "Real blender roar starts on the beat.", next: "Hard cut." },
+    { s: 5, e: 7, bg: "green", title: "Pistachio pour",
+      action: "Shake poured into the sauced glass. It fills the middle and pushes the streak into wave lines.",
+      camera: "Side-on at glass height, locked. 120fps, slowed.",
+      props: "Spouted jug, sauced glass on its tape mark.",
+      text: "Pour", vo: "", sound: "Real pour sound, music low.", next: "Hard cut." },
+    { s: 7, e: 9, bg: "green", title: "Pistachio topping",
+      action: "A hand lays golden kunafa strands in a ring, then sprinkles chopped pistachios from 10 cm.",
+      camera: "45° down, close: top third of the glass fills the frame. Real speed.",
+      props: "Kunafa in a small bowl, pistachios in a pinch bowl.",
+      text: "Kunafa on top", vo: "", sound: "Real kunafa crunch on the beat.", next: "Hard cut." },
+    { s: 9, e: 11, bg: "green", title: "Pistachio hero",
+      action: "Full glass on green, faceted base visible.",
+      camera: "Low angle, phone 5 cm above the counter. Slow push-in about 10 cm over 2 s.",
+      props: "Finished shake, clean glass.",
+      text: "Pistachio Kunafa Shake · ₹160", vo: "Pistachio Kunafa.",
+      sound: "Soft glass tap on the counter at 9.0 s.", next: "Paper wave wipe left to right on 11.0 s, ending on mustard." },
+    { s: 11, e: 13, bg: "mustard", title: "Real sauce spiral",
+      action: "A hand turns a tilted empty glass while the squeeze bottle draws the dark sauce down the inside wall in a spiral. This shows how the hook's wave is made.",
+      camera: "Side-on, close, locked.",
+      props: "Squeeze bottle, empty glass chilled 10 min, mustard paper.",
+      text: "", vo: "", sound: "Wave swoosh, music back up.", next: "Hard cut." },
+    { s: 13, e: 14.5, bg: "mustard", title: "Biscoff pour",
+      action: "Biscoff shake poured, same framing as the pistachio pour (a match cut).",
+      camera: "Identical to shot 4. 120fps.",
+      props: "Spouted jug, Biscoff shake.",
+      text: "Pour", vo: "", sound: "Real pour sound.", next: "Hard cut." },
+    { s: 14.5, e: 16.5, bg: "mustard", title: "Biscoff topping",
+      action: "Kunafa strands in a ring, then a hand crumbles a biscuit over the top. Keep the biscuit's printed face turned down.",
+      camera: "45° down, close. Real speed.",
+      props: "Kunafa, biscuits with packaging out of shot.",
+      text: "Kunafa on top", vo: "", sound: "Real crumble and crunch.", next: "Hard cut." },
+    { s: 16.5, e: 18.5, bg: "mustard", title: "Biscoff hero",
+      action: "Finished Biscoff shake on mustard, faceted base visible.",
+      camera: "Same low angle and push-in as shot 6.",
+      props: "Finished shake, clean glass.",
+      text: "Biscoff Kunafa Shake · ₹160", vo: "Biscoff Kunafa.",
+      sound: "Glass tap.", next: "Paper wave wipe on 18.5 s, ending on cream." },
+    { s: 18.5, e: 22.5, bg: "cream", title: "Final hero + call to action",
+      action: "Both shakes side by side on cream, pistachio on the left. Logo badge above them. Hold still.",
+      camera: "Eye level, locked. Glasses fill the middle 60% of the frame.",
+      props: "Both shakes, logo on a printed card behind them (or the original logo file in the edit).",
+      text: "Catch the wave → Visit ICEWAVES, Uliyathaduka · small: New Sip New Love",
+      vo: "Catch the wave. Visit Icewaves, Uliyathaduka.",
+      sound: "Music peak, ends on a downbeat.", next: "Paper wave sweeps in." },
+    { s: 22.5, e: 23.5, bg: "green", title: "Loop back",
+      action: "The wave covers the frame and pulls away to show the empty glass on green: exactly the first frame.",
+      camera: "Locked on tripod. Hidden cut while the frame is covered.",
+      props: "Empty glass back on its green tape mark.",
+      text: "", vo: "", sound: "Swoosh. Music cuts dead.", next: "Loops straight into 0.0 s." }
+  ];
+
+  var KEY = "icewaves-shot-sheet-v1";
+  var done = {};
+  try { done = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { done = {}; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {} }
+
+  function fmt(n) { return n.toFixed(1); }
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  var tl = document.getElementById("timeline");
+  var list = document.getElementById("shots");
+  var paperName = { green: "green paper", mustard: "mustard paper", cream: "cream paper" };
+
+  shots.forEach(function (sh, i) {
+    var n = i + 1;
+    var seg = document.createElement("button");
+    seg.type = "button";
+    seg.className = "seg " + sh.bg;
+    seg.style.flex = (sh.e - sh.s) + " 1 0";
+    seg.textContent = n;
+    seg.setAttribute("role", "listitem");
+    seg.setAttribute("aria-label", "Shot " + n + ", " + fmt(sh.s) + " to " + fmt(sh.e) + " seconds: " + sh.title);
+    seg.addEventListener("click", function () { document.getElementById("shot-" + n).scrollIntoView({ behavior: "smooth", block: "start" }); });
+    tl.appendChild(seg);
+
+    var card = document.createElement("article");
+    card.className = "shot";
+    card.id = "shot-" + n;
+    var textHtml = sh.text ? '<span class="ost">' + esc(sh.text) + "</span>" : '<span class="dash">None</span>';
+    var voHtml = sh.vo ? "“" + esc(sh.vo) + "”" : '<span class="dash">None</span>';
+    card.innerHTML =
+      '<div class="shot-head">' +
+        '<span class="swatch ' + sh.bg + '" title="' + paperName[sh.bg] + '"></span>' +
+        '<div class="shot-title"><span class="tc">Shot ' + n + " · " + fmt(sh.s) + "–" + fmt(sh.e) + " s · " + paperName[sh.bg] + "</span><h3>" + esc(sh.title) + "</h3></div>" +
+        '<label class="got"><input type="checkbox" id="got-' + n + '"> Filmed</label>' +
+      "</div>" +
+      '<dl class="fields">' +
+        '<div class="wide"><dt>Action and composition</dt><dd>' + esc(sh.action) + "</dd></div>" +
+        "<div><dt>Camera</dt><dd>" + esc(sh.camera) + "</dd></div>" +
+        "<div><dt>Props and prep</dt><dd>" + esc(sh.props) + "</dd></div>" +
+        "<div><dt>On-screen text</dt><dd>" + textHtml + "</dd></div>" +
+        "<div><dt>Voiceover</dt><dd>" + voHtml + "</dd></div>" +
+        "<div><dt>Sound or music</dt><dd>" + esc(sh.sound) + "</dd></div>" +
+        "<div><dt>Transition</dt><dd>" + esc(sh.next) + "</dd></div>" +
+      "</dl>";
+    list.appendChild(card);
+
+    var box = card.querySelector("input");
+    box.checked = !!done[n];
+    box.addEventListener("change", function () {
+      if (box.checked) done[n] = true; else delete done[n];
+      save(); refresh();
+    });
+  });
+
+  function refresh() {
+    var c = 0;
+    shots.forEach(function (sh, i) {
+      var n = i + 1, on = !!done[n];
+      if (on) c++;
+      document.getElementById("shot-" + n).classList.toggle("done", on);
+      tl.children[i].classList.toggle("done", on);
+    });
+    document.getElementById("count").textContent = c + " / " + shots.length + " shots filmed";
+    document.getElementById("barfill").style.width = (c / shots.length * 100) + "%";
+  }
+  refresh();
+
+  document.getElementById("reset").addEventListener("click", function () {
+    done = {}; save();
+    shots.forEach(function (sh, i) { document.getElementById("got-" + (i + 1)).checked = false; });
+    refresh();
+  });
+
+  function selectText(el) {
+    var r = document.createRange(); r.selectNodeContents(el);
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+  document.querySelectorAll("[data-copy]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var el = document.getElementById(btn.getAttribute("data-copy"));
+      var text = el.tagName === "OL"
+        ? Array.prototype.map.call(el.children, function (li) { return li.textContent; }).join("\n")
+        : el.textContent;
+      var done = function () { btn.textContent = "Copied"; setTimeout(function () { btn.textContent = "Copy"; }, 1600); };
+      var fail = function () { selectText(el); btn.textContent = "Selected, press copy"; setTimeout(function () { btn.textContent = "Copy"; }, 2400); };
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fail);
+        else fail();
+      } catch (e) { fail(); }
+    });
+  });
+})();
+</script>

@@ -1,0 +1,323 @@
+<title>Catch the Wave CapCut Recipe</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: maroon header like the poster type, a track map of the 23.5 s timeline, then eight build stages, each a column of tickable steps with "match this frame" thumbnails. Single column on phones. */
+:root {
+  --bg: #FFF7EE;
+  --surface: #FFFFFF;
+  --ink: #2A1316;
+  --muted: #6E5A55;
+  --line: #EEDCCB;
+  --maroon: #A51C30;
+  --on-maroon: #FFF4E0;
+  --wave: #1C6FB5;
+  --wave-soft: #E1EDF8;
+  --ok: #3E7A2E;
+  --t-green: #9CC25E;
+  --t-mustard: #E2B23A;
+  --t-cream: #F6D9BC;
+  --t-wave: #2E86D0;
+  --t-text: #A51C30;
+  --t-art: #7A5AA8;
+  --t-shake: #6E9A2C;
+  --t-ink: #1E0D10;
+  --font-display: "Bagel Fat One", "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #170E10; --surface: #231618; --ink: #F6EADB; --muted: #C3AFA5; --line: #3D2A2C;
+    --maroon: #E0627A; --on-maroon: #FFF4E0; --wave: #78B6EE; --wave-soft: #1C2B3A; --ok: #8BC77A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #170E10; --surface: #231618; --ink: #F6EADB; --muted: #C3AFA5; --line: #3D2A2C;
+  --maroon: #E0627A; --on-maroon: #FFF4E0; --wave: #78B6EE; --wave-soft: #1C2B3A; --ok: #8BC77A;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55; }
+.wrap { max-width: 980px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+h2 { font-family: var(--font-display); font-weight: 400; font-size: 1.7rem; line-height: 1.1; color: var(--maroon); }
+h3 { font-size: 1.05rem; }
+p { margin: 0; }
+.eyebrow { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+section { padding-block: 2.25rem 0; display: grid; gap: 1rem; }
+.lede { max-width: 65ch; }
+code, .mono { font-family: var(--font-mono); font-size: 0.85em; }
+code { background: var(--wave-soft); padding: 0.05rem 0.35rem; border-radius: 4px; overflow-wrap: anywhere; }
+
+.head { background: #A51C30; color: #FFF4E0; }
+.head .wrap { padding-block: 1.75rem 1.5rem; display: grid; gap: 0.6rem; }
+.head .eyebrow { color: #FFF4E0; opacity: 0.85; }
+.head h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.4rem, 10vw, 4.2rem); line-height: 0.95; }
+.head p { max-width: 60ch; opacity: 0.95; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chip { font-family: var(--font-mono); font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+
+.note { border-left: 4px solid var(--wave); background: var(--wave-soft); padding: 0.8rem 1rem; border-radius: 0 8px 8px 0; max-width: 70ch; }
+
+/* assets */
+.assets { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th, td { text-align: left; padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+th { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+td.f { font-family: var(--font-mono); font-size: 0.8rem; white-space: nowrap; }
+.tnum { font-variant-numeric: tabular-nums; font-family: var(--font-mono); font-size: 0.85rem; white-space: nowrap; }
+
+/* track map */
+.mapbox { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 0.9rem; }
+.map { min-width: 720px; display: grid; grid-template-columns: 110px 1fr; row-gap: 6px; column-gap: 10px; align-items: center; }
+.map .lab { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.lane { position: relative; height: 30px; background: repeating-linear-gradient(90deg, transparent 0 calc(100% / 23.5 * 2 - 1px), var(--line) calc(100% / 23.5 * 2 - 1px) calc(100% / 23.5 * 2)); border-radius: 6px; }
+.bar { position: absolute; top: 3px; bottom: 3px; border-radius: 5px; font-family: var(--font-mono); font-size: 0.66rem; color: var(--t-ink); padding: 0 5px; display: flex; align-items: center; overflow: hidden; white-space: nowrap; }
+.bar.light { color: #FFFFFF; }
+.scale { position: relative; height: 18px; font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.scale span { position: absolute; transform: translateX(-50%); }
+.scale span:first-child { transform: none; }
+
+/* stages */
+.stage { display: grid; gap: 0.9rem; }
+.stage-head { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
+.stage-no { font-family: var(--font-display); font-size: 2.2rem; line-height: 1; color: var(--maroon); }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
+.step { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 0.85rem 1rem; display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 0.8rem; align-items: start; min-width: 0; }
+.step.has-frame { grid-template-columns: auto 1fr auto; }
+.step input { width: 1.25rem; height: 1.25rem; margin-top: 0.15rem; accent-color: var(--ok); }
+.step input:focus-visible, .btn:focus-visible { outline: 2px solid var(--wave); outline-offset: 2px; }
+.step.done { opacity: 0.6; }
+.step .body { min-width: 0; display: grid; gap: 0.3rem; }
+.step .when { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.step ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.2rem; }
+.frame { width: 96px; flex: none; display: grid; gap: 0.2rem; justify-items: center; }
+.frame img { width: 96px; aspect-ratio: 9 / 16; max-width: 100%; border-radius: 8px; border: 1px solid var(--line); object-fit: cover; display: block; }
+.frame span { font-family: var(--font-mono); font-size: 0.62rem; color: var(--muted); text-align: center; }
+@media (max-width: 520px) {
+  .step.has-frame { grid-template-columns: auto 1fr; }
+  .step .frame { grid-column: 2; justify-items: start; }
+}
+.menu { font-weight: 700; }
+.menu::before { content: "▸ "; color: var(--maroon); font-weight: 400; }
+
+.progress { font-family: var(--font-mono); font-size: 0.85rem; font-variant-numeric: tabular-nums; display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+.pbar { flex: 1 1 160px; height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.pbar i { display: block; height: 100%; width: 0; background: var(--ok); transition: width .25s; }
+.btn { font: inherit; font-size: 0.82rem; padding: 0.35rem 0.8rem; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.btn:hover { border-color: var(--ink); }
+
+.copyblock { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; display: grid; gap: 0.6rem; }
+.copyblock .top { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.copytext { white-space: pre-wrap; overflow-wrap: anywhere; }
+footer { padding-block: 2.5rem 2rem; color: var(--muted); font-size: 0.85rem; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header class="head">
+  <div class="wrap">
+    <span class="eyebrow">ICEWAVES · build it yourself</span>
+    <h1>Catch the Wave in CapCut</h1>
+    <p>Rebuild the 23.5-second Reel on your phone with the free CapCut app, using the asset pack made from your poster. Every step shows the frame you're aiming for.</p>
+    <div class="chips"><span class="chip">CapCut mobile</span><span class="chip">9:16 · 30 fps</span><span class="chip">23.5 s</span><span class="chip">about 45 minutes</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section aria-labelledby="pack-h">
+    <span class="eyebrow">Before you start</span>
+    <h2 id="pack-h">Save the asset pack to your phone</h2>
+    <p class="lede">Unzip <code>icewaves-capcut-pack.zip</code> (sent in the chat, also on GitHub in <code>icewaves/capcut-pack/</code>) and save every file to your gallery. The shakes, logo and headline are cut straight from your poster. The text is already styled, so you don't need any special font.</p>
+    <div class="assets">
+      <table>
+        <thead><tr><th>File</th><th>What it is</th><th>Where it goes</th></tr></thead>
+        <tbody>
+          <tr><td class="f">bg-green.png<br>bg-mustard.png<br>bg-cream.png</td><td>Backdrops with soft window light and a tabletop</td><td>Main track</td></tr>
+          <tr><td class="f">shake-pistachio.png<br>shake-biscoff.png</td><td>The real shakes from the poster, background removed</td><td>Overlays, every shot</td></tr>
+          <tr><td class="f">headline-new-sip-new-love.png</td><td>The poster's own headline</td><td>Finale, 16.3 s</td></tr>
+          <tr><td class="f">logo-icewaves.png</td><td>The poster's logo</td><td>End card, 18.55 s</td></tr>
+          <tr><td class="f">text-1 … text-6 .png</td><td>All on-screen text, ready-styled</td><td>See stage 6</td></tr>
+          <tr><td class="f">badge-160.png · sparkle.png</td><td>Price sticker and sparkle</td><td>Hero shots and reveals</td></tr>
+          <tr><td class="f">wave-greenscreen.mp4</td><td>1 s wave wipe on green. Fully blue at 0.5 s</td><td>4 times, stage 7</td></tr>
+          <tr><td class="f">icewaves-soundtrack-video.mp4<br>icewaves-soundtrack.m4a</td><td>Original 120 BPM music with whooshes and crunches timed to the edit</td><td>Stage 8</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">CapCut renames buttons between versions. If a button here has a different name on your phone, look for the closest match: for example <b>Cutout</b> is called <b>Remove BG</b> in newer versions.</p>
+  </section>
+
+  <section aria-labelledby="map-h">
+    <span class="eyebrow">The whole edit at a glance</span>
+    <h2 id="map-h">Track map</h2>
+    <p class="lede">Each row is a layer in CapCut. Bottom row is the main track. Grid lines are every 2 seconds, the length of one bar of music.</p>
+    <div class="mapbox"><div class="map" id="map"></div></div>
+  </section>
+
+  <section aria-labelledby="go-h">
+    <span class="eyebrow">Build</span>
+    <h2 id="go-h">Eight stages</h2>
+    <div class="progress">
+      <span id="count">0 steps done</span>
+      <div class="pbar" aria-hidden="true"><i id="pfill"></i></div>
+      <button class="btn" type="button" id="reset">Clear ticks</button>
+    </div>
+    <div id="stages" class="stage-list" style="display:grid;gap:2rem"></div>
+  </section>
+
+  <section aria-labelledby="cap-h">
+    <span class="eyebrow">When you post</span>
+    <h2 id="cap-h">Caption</h2>
+    <div class="copyblock">
+      <div class="top"><h3>Instagram caption</h3><button class="btn" type="button" id="copycap">Copy</button></div>
+      <p class="copytext" id="cap">A new wave just hit Uliyathaduka 🌊 Pistachio Kunafa and Biscoff Kunafa shakes, ₹160 each. Catch the wave at ICEWAVES, Uliyathaduka. New Sip New Love.
+
+#Icewaves #Uliyathaduka #KunafaShake #PistachioKunafa #BiscoffKunafa</p>
+    </div>
+    <p class="note">₹160 is not printed on the poster you shared. Confirm the price before you post.</p>
+  </section>
+
+  <footer>ICEWAVES · Uliyathaduka · Estd 2026</footer>
+</main>
+
+<script>
+(function () {
+  var DUR = 23.5;
+  // ---------- track map ----------
+  var lanes = [
+    { name: "Wave", color: "--t-wave", light: true, bars: [[0.5, 1.5, "wave"], [6.5, 7.5, "wave"], [13.5, 14.5, "wave"], [22.5, 23.5, "wave"]] },
+    { name: "Text", color: "--t-text", light: true, bars: [[0.05, 1.95, "hook"], [3.5, 5, "kunafa"], [5, 6.85, "pistachio"], [10.5, 12, "kunafa"], [12, 13.85, "biscoff"], [14.3, 16.15, "catch the wave"], [19.1, 22.85, "visit us"]] },
+    { name: "Stickers", color: "--t-mustard", bars: [[1.4, 1.9, ""], [5.35, 6.85, "₹160"], [12.35, 13.85, "₹160"], [14.6, 15.1, ""], [19, 19.45, ""]] },
+    { name: "Logo · head", color: "--t-art", light: true, bars: [[16.3, 18.45, "headline"], [18.55, 23, "logo"]] },
+    { name: "Shake 2", color: "--t-shake", light: true, bars: [[14.1, 23, "pistachio"]] },
+    { name: "Shake 1", color: "--t-shake", light: true, bars: [[0, 1, "1"], [1, 2, "2"], [2, 3.5, "3"], [3.5, 5, "4"], [5, 7, "5 pistachio"], [7, 9, "6"], [9, 10.5, "7"], [10.5, 12, "8"], [12, 14, "9 biscoff"], [14, 23, "biscoff"], [23, 23.5, ""]] },
+    { name: "Main", color: "--t-green", bars: [[0, 7, "bg-green"], [7, 14, "bg-mustard", "--t-mustard"], [14, 23, "bg-cream", "--t-cream"], [23, 23.5, "", "--t-green"]] }
+  ];
+  var map = document.getElementById("map");
+  lanes.forEach(function (ln) {
+    var lab = document.createElement("div"); lab.className = "lab"; lab.textContent = ln.name; map.appendChild(lab);
+    var lane = document.createElement("div"); lane.className = "lane";
+    ln.bars.forEach(function (b) {
+      var el = document.createElement("div");
+      el.className = "bar" + (ln.light ? " light" : "");
+      el.style.left = (b[0] / DUR * 100) + "%";
+      el.style.width = "calc(" + ((b[1] - b[0]) / DUR * 100) + "% - 2px)";
+      el.style.background = "var(" + (b[3] || ln.color) + ")";
+      el.textContent = b[2];
+      el.title = ln.name + " " + b[0] + "–" + b[1] + " s" + (b[2] ? " · " + b[2] : "");
+      lane.appendChild(el);
+    });
+    map.appendChild(lane);
+  });
+  map.appendChild(document.createElement("div"));
+  var sc = document.createElement("div"); sc.className = "scale";
+  [0, 4, 8, 12, 16, 20, 23.5].forEach(function (s, i) {
+    var sp = document.createElement("span"); sp.style.left = (s / DUR * 100) + "%"; sp.textContent = s + (i === 6 ? " s" : "");
+    if (i === 6) { sp.style.left = "auto"; sp.style.right = "0"; sp.style.transform = "none"; }
+    sc.appendChild(sp);
+  });
+  map.appendChild(sc);
+
+  // ---------- stages ----------
+  function M(t) { return '<span class="menu">' + t + "</span>"; }
+  var stages = [
+    { title: "Set up the project", sub: "Main track and canvas", steps: [
+      { when: "once", html: "Open CapCut, tap " + M("New project") + ", pick <b>bg-green.png</b>, tap " + M("Add") + "." },
+      { when: "once", html: "Tap " + M("Ratio") + " (some versions: " + M("Format") + ") and choose <b>9:16</b>. If CapCut added an <b>Ending</b> clip at the end of the timeline, select it and delete it." },
+      { when: "0 – 7.0 s", html: "Select the green clip and drag its right edge until it is exactly <b>7.0 s</b>. Pinch the timeline to zoom in so you can see tenths of a second." },
+      { when: "7.0 – 23.5 s", html: "Tap the <b>+</b> at the end of the main track and add, in order:<ul><li><b>bg-mustard.png</b>, 7.0 s long</li><li><b>bg-cream.png</b>, 9.0 s long</li><li><b>bg-green.png</b> again, 0.5 s long (this is the loop back to the start)</li></ul>The project should now be <b>23.5 s</b>. Don't add transitions between these clips; the wave covers every cut." }
+    ]},
+    { title: "Pistachio shots", sub: "One overlay, split into five", steps: [
+      { when: "0 – 7.0 s", html: "Move the playhead to 0. Tap " + M("Overlay") + " → " + M("Add overlay") + " → <b>shake-pistachio.png</b>. Drag its right edge to <b>7.0 s</b>." },
+      { when: "split", html: "Select the overlay and use " + M("Split") + " at <b>1.0, 2.0, 3.5 and 5.0 s</b>. You now have five pieces. Set each one up as below." },
+      { when: "0 – 1.0 s · piece 1", frame: "f01", cap: "0.4 s", html: "<b>Sauce close-up.</b> Pinch the shake very large so the dark sauce band fills the middle of the screen.<ul><li>Playhead at 0.0 → tap the " + M("◆ keyframe") + " button → slide the shake a little to the right.</li><li>Playhead at the end of the piece → tap ◆ again → slide it a little to the left. It now pans like a wave.</li></ul>" },
+      { when: "1.0 – 2.0 s · piece 2", frame: "f02", cap: "1.6 s", html: "<b>Reveal.</b> Make the whole glass visible, centred, with its base just below the line where the table starts.<ul><li>" + M("Animation") + " → " + M("In") + " → a slide-up or bounce style, about <b>0.4 s</b>.</li></ul>" },
+      { when: "2.0 – 3.5 s · piece 3", frame: "f03", cap: "2.6 s", html: "<b>Tilt up.</b> Make the glass about twice the screen height.<ul><li>Keyframe at 2.0 s: glass pushed up so you see the faceted base near the bottom.</li><li>Keyframe at 3.5 s: glass pulled down so the kunafa top sits in the upper third.</li></ul>" },
+      { when: "3.5 – 5.0 s · piece 4", frame: "f04", cap: "4.2 s", html: "<b>Kunafa close-up.</b> Zoom in until the top of the glass fills the width and the kunafa is in the centre.<ul><li>Keyframe at the start, then another at the end zoomed in about 10% more.</li></ul>" },
+      { when: "5.0 – 7.0 s · piece 5", frame: "f05", cap: "6.0 s", html: "<b>Hero.</b> Same framing as piece 2, glass a little lower so the name text fits above it.<ul><li>Keyframe at the start, then one at the end about 5% bigger for a slow push-in.</li></ul>" }
+    ]},
+    { title: "Biscoff shots", sub: "Same moves, four pieces", steps: [
+      { when: "7.0 – 14.0 s", html: "Playhead at 7.0 → " + M("Overlay") + " → " + M("Add overlay") + " → <b>shake-biscoff.png</b>. Make it end at <b>14.0 s</b>, then " + M("Split") + " at <b>9.0, 10.5 and 12.0 s</b>." },
+      { when: "7.0 – 9.0 s", frame: "f06", cap: "8.0 s", html: "<b>Sauce close-up.</b> On Biscoff the dark sauce sits near the top, so the kunafa shows too. Pan right to left with two keyframes, like pistachio piece 1." },
+      { when: "9.0 – 10.5 s", frame: "f07", cap: "9.7 s", html: "<b>Tilt up.</b> Same as pistachio piece 3." },
+      { when: "10.5 – 12.0 s", frame: "f08", cap: "11.2 s", html: "<b>Kunafa close-up.</b> Same as pistachio piece 4." },
+      { when: "12.0 – 14.0 s", frame: "f09", cap: "13.0 s", html: "<b>Hero.</b> Same as pistachio piece 5." }
+    ]},
+    { title: "The finale", sub: "Both shakes, headline, logo", steps: [
+      { when: "14.0 – 23.0 s", frame: "f10", cap: "15.0 s", html: "Add <b>shake-biscoff.png</b> as an overlay from <b>14.0 to 23.0 s</b>, and <b>shake-pistachio.png</b> from <b>14.1 to 23.0 s</b>. Place them side by side, Biscoff on the left, both standing on the table line.<ul><li>" + M("Animation") + " → " + M("In") + " → slide-up or bounce, about 0.45 s each. The 0.1 s gap makes them land one after the other.</li></ul>" },
+      { when: "16.1 – 16.6 s", frame: "f11", cap: "17.3 s", html: "Make room for the headline: add keyframes on both shakes at 16.1 s (as they are) and 16.6 s (a little smaller and lower)." },
+      { when: "16.3 – 18.45 s", html: "Add <b>headline-new-sip-new-love.png</b> above the shakes. " + M("In") + " → a zoom or pop style, 0.45 s. " + M("Out") + " → fade, 0.15 s." },
+      { when: "18.4 – 18.9 s", frame: "f12", cap: "20.5 s", html: "Keyframes on both shakes again: at 18.4 s as they are, at 18.9 s smaller (about 40% of the screen height) and closer together, leaving the top half free." },
+      { when: "18.55 – 23.0 s", html: "Add <b>logo-icewaves.png</b> in the upper middle, about half the screen width. " + M("In") + " → a rotate or pop style, 0.45 s." },
+      { when: "23.0 – 23.5 s", html: "<b>Loop.</b> Select pistachio piece 1, tap " + M("Copy") + ", and drag the copy to start at 23.0 s. Trim it to 0.5 s. The last frame now matches the first, so the Reel loops cleanly." }
+    ]},
+    { title: "Sparkles", sub: "Optional, adds polish", steps: [
+      { when: "1.4 · 14.6 · 19.0 s", html: "Add <b>sparkle.png</b> three times, each about 0.5 s long:<ul><li>1.4 s, at the top-left of the pistachio glass rim</li><li>14.6 s, beside the left glass</li><li>19.0 s, at the top-right of the logo</li></ul>Make each one small. " + M("In") + " → zoom in, " + M("Out") + " → fade out." }
+    ]},
+    { title: "Text and price", sub: "Ready-made images", steps: [
+      { when: "0.05 – 1.95 s", frame: "f01", cap: "hook", html: "<b>text-1-hook.png</b> in the top third (stay below the top 15% where Instagram's buttons sit). " + M("In") + " → pop or bounce, 0.3 s." },
+      { when: "3.5 – 5.0 s and 10.5 – 12.0 s", html: "<b>text-2-kunafa-on-top.png</b>, twice. Same position and animation." },
+      { when: "5.0 – 6.85 s", frame: "f05", cap: "name + badge", html: "<b>text-3-pistachio.png</b> above the glass. Then <b>badge-160.png</b> from <b>5.35 s</b>, to the right of the glass top. Badge " + M("In") + " → rotate or pop." },
+      { when: "12.0 – 13.85 s", html: "<b>text-4-biscoff.png</b>, and <b>badge-160.png</b> from <b>12.35 s</b>. Same places as pistachio." },
+      { when: "14.3 – 16.15 s", html: "<b>text-5-catch-the-wave.png</b> above the two shakes." },
+      { when: "19.1 – 22.85 s", frame: "f12", cap: "end card", html: "<b>text-6-visit-uliyathaduka.png</b> between the logo and the shakes. This is the one call to action." },
+      { when: "check", html: "Every text ends 0.15 s before a wave covers the screen, so nothing ghosts through the blue." }
+    ]},
+    { title: "Wave wipes", sub: "The brand move", steps: [
+      { when: "0.5 · 6.5 · 13.5 · 22.5 s", frame: "f13", cap: "7.0 s", html: "Add <b>wave-greenscreen.mp4</b> as an overlay four times, starting at <b>0.5, 6.5, 13.5 and 22.5 s</b>. Each one is 1 s and is fully blue at its half-way point, so it hides the cut at 1.0, 7.0, 14.0 and 23.0 s. Pinch each one to fill the whole screen." },
+      { when: "each wave", html: "Select the wave → " + M("Cutout") + " (or " + M("Remove BG") + ") → " + M("Chroma key") + ". Drag the colour picker onto the green, then raise " + M("Intensity") + " until the green disappears and only the blue wave is left. Keep " + M("Shadow") + " low." },
+      { when: "each wave", html: "If a wave appears behind a shake or text, select it → " + M("Layer") + " (or " + M("Arrange") + ") → bring it to the front. The waves must sit on the top layer." }
+    ]},
+    { title: "Sound and export", sub: "Finish", steps: [
+      { when: "0 s", html: "Tap " + M("Audio") + " → " + M("Extracted") + " → pick <b>icewaves-soundtrack-video.mp4</b> → import sound only. Line it up to start at 0. The whooshes and crunches are already timed to this edit. Or skip this and pick licensed music in Instagram when you post." },
+      { when: "check", html: "Play it through with sound on. Check that each wave hides its cut, the end flows back into the start, and no text sits in the bottom quarter of the screen." },
+      { when: "export", html: "Tap the resolution at the top: <b>1080p</b>, <b>30 fps</b>, then " + M("Export") + ". Post as a Reel with the caption below." }
+    ]}
+  ];
+
+  var KEY = "icewaves-capcut-v1", done = {};
+  try { done = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { done = {}; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {} }
+  var host = document.getElementById("stages"), total = 0;
+  stages.forEach(function (st, si) {
+    var sec = document.createElement("div"); sec.className = "stage";
+    sec.innerHTML = '<div class="stage-head"><span class="stage-no">' + (si + 1) + '</span><h3 style="font-size:1.25rem">' + st.title + '</h3><span class="eyebrow">' + st.sub + "</span></div>";
+    var ol = document.createElement("ol"); ol.className = "steps";
+    st.steps.forEach(function (sp, pi) {
+      total++;
+      var id = "s" + si + "-" + pi;
+      var li = document.createElement("li"); li.className = "step" + (sp.frame ? " has-frame" : "");
+      li.innerHTML = '<input type="checkbox" id="' + id + '" aria-label="Done">' +
+        '<div class="body"><span class="when">' + sp.when + "</span><div>" + sp.html + "</div></div>" +
+        (sp.frame ? '<div class="frame"><img src="frames/' + sp.frame + '.jpg" alt="Target frame at ' + sp.cap + '" loading="lazy"><span>' + sp.cap + "</span></div>" : "");
+      var box = li.querySelector("input");
+      box.checked = !!done[id]; li.classList.toggle("done", box.checked);
+      box.addEventListener("change", function () { if (box.checked) done[id] = 1; else delete done[id]; li.classList.toggle("done", box.checked); save(); refresh(); });
+      ol.appendChild(li);
+    });
+    sec.appendChild(ol); host.appendChild(sec);
+  });
+  function refresh() {
+    var c = Object.keys(done).length;
+    document.getElementById("count").textContent = c + " of " + total + " steps done";
+    document.getElementById("pfill").style.width = (c / total * 100) + "%";
+  }
+  refresh();
+  document.getElementById("reset").addEventListener("click", function () {
+    done = {}; save();
+    document.querySelectorAll(".step input").forEach(function (b) { b.checked = false; b.closest(".step").classList.remove("done"); });
+    refresh();
+  });
+  document.getElementById("copycap").addEventListener("click", function () {
+    var btn = this, el = document.getElementById("cap");
+    var ok = function () { btn.textContent = "Copied"; setTimeout(function () { btn.textContent = "Copy"; }, 1600); };
+    var fail = function () { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = "Selected, press copy"; setTimeout(function () { btn.textContent = "Copy"; }, 2400); };
+    try { navigator.clipboard.writeText(el.textContent).then(ok, fail); } catch (e) { fail(); }
+  });
+})();
+</script>
